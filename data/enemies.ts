@@ -1,0 +1,102 @@
+
+import { EnemyData } from '../types';
+
+export const ALL_ENEMIES: EnemyData[] = [
+    {
+        codexId: 'dummy_melee',
+        name: 'Training Dummy',
+        rank: 'training',
+        char: 'T',
+        baseHealth: 20,
+        baseAttack: 0,
+    },
+     {
+        codexId: 'dummy_ranged',
+        name: 'Training Dummy',
+        rank: 'training',
+        char: 'T',
+        baseHealth: 20,
+        baseAttack: 0,
+    },
+    {
+        codexId: 'des_drone',
+        name: 'Destroyer Drone',
+        rank: 'normal',
+        char: 'd',
+        baseHealth: 15,
+        baseAttack: 4,
+    },
+    {
+        codexId: 'doom_drone',
+        name: 'Doom Drone',
+        rank: 'mini-boss',
+        char: 'D',
+        baseHealth: 25,
+        baseAttack: 7,
+    },
+
+    {
+        codexId: 'sec_bot',
+        name: 'Security Bot',
+        rank: 'normal',
+        char: 's',
+        baseHealth: 20,
+        baseAttack: 3,
+    },
+    {
+        codexId: 'ass_bot',
+        name: 'Assault Bot',
+        rank: 'normal',
+        char: 'a',
+        baseHealth: 15,
+        baseAttack: 4,
+    },
+    {
+        codexId: 'heavy_bot',
+        name: 'Heavy Bot',
+        rank: 'normal',
+        char: 'h',
+        baseHealth: 50,
+        baseAttack: 6,
+    },
+    {
+        codexId: 'sentry_bot',
+        name: 'Sentry Bot',
+        rank: 'mini-boss',
+        char: 'S',
+        baseHealth: 40,
+        baseAttack: 5,
+    },
+    {
+        codexId: 'Assason_bot',
+        name: 'Assasin Bot',
+        rank: 'mini-boss',
+        char: 'A',
+        baseHealth: 50,
+        baseAttack: 8,
+    },
+    {
+        codexId: 'hunder_bot',
+        name: 'Hunter Bot',
+        rank: 'mini-boss',
+        char: 'a',
+        baseHealth: 60,
+        baseAttack: 10,
+    },
+    {
+        codexId: 'warden-mini',
+        name: 'Warden Unit',
+        rank: 'boss',
+        char: 'w',
+        baseHealth: 150,
+        baseAttack: 15,
+    },
+    {
+        codexId: 'warden-boss',
+        name: 'Warden Boss',
+        rank: 'boss',
+        char: 'W',
+        baseHealth: 300,
+        baseAttack: 20,
+    }
+];

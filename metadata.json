@@ -1,0 +1,5 @@
+{
+  "name": " Cyber Rogue",
+  "description": "A modern, web-based roguelike dungeon crawler built with React and Tailwind CSS. Explore procedurally generated dungeons, fight monsters, and collect treasure.",
+  "requestFramePermissions": []
+}
