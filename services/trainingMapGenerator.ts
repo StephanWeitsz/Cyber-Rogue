@@ -99,6 +99,8 @@ export const createTrainingMap = (uuid: () => string) => {
     const room4 = new Rect(28, 8, 8, 8);
     carveRoom(room4);
     traps.push({ position: { x: 32, y: 12 }, type: 'spike', damage: 10, revealed: false, triggered: false });
+    traps.push({ position: { x: 30, y: 10 }, type: 'spike', damage: 10, revealed: false, triggered: false });
+    traps.push({ position: { x: 33, y: 14 }, type: 'spike', damage: 10, revealed: false, triggered: false });
 
     // --- Room 5 & Secret Room: Search for Secrets ---
     const room5 = new Rect(28, 18, 8, 8);
@@ -113,7 +115,7 @@ export const createTrainingMap = (uuid: () => string) => {
         health: secBotData.baseHealth, maxHealth: secBotData.baseHealth, attack: secBotData.baseAttack,
         name: secBotData.name, rank: secBotData.rank, char: secBotData.char,
     });
-    items.push({ id: uuid(), codexId: 'potion_health', position: { x: room5.center.x + 2, y: room5.center.y }, type: 'potion', name: 'Health Pack', value: 25, tier: 1 });
+    items.push({ id: uuid(), codexId: 'potion_health', position: { x: room5.center.x + 2, y: room5.center.y }, type: 'potion', name: 'Health Pack', value: 25, tier: 1, rarity: 'common' });
     
     const deadEndCorridorX = 38;
     carveHTunnel(room5.center.x, deadEndCorridorX, 22); // Horizontal corridor leading to the dead end.
@@ -135,8 +137,8 @@ export const createTrainingMap = (uuid: () => string) => {
     secretDoors.push({ position: secretDoorPos, revealed: false });
 
     // Place scrolls in the newly carved secret room
-    items.push({ id: uuid(), codexId: 'scroll_teleport', position: { x: secretRoom.center.x - 1, y: secretRoom.center.y }, type: 'scroll', name: 'Scroll of Teleport', value: 0, tier: 1, scrollType: 'teleport' });
-    items.push({ id: uuid(), codexId: 'scroll_invisibility', position: { x: secretRoom.center.x + 1, y: secretRoom.center.y }, type: 'scroll', name: 'Scroll of Invisibility', value: 0, tier: 1, scrollType: 'invisibility' });
+    items.push({ id: uuid(), codexId: 'scroll_teleport', position: { x: secretRoom.center.x - 1, y: secretRoom.center.y }, type: 'scroll', name: 'Scroll of Teleport', value: 0, tier: 1, scrollType: 'teleport', rarity: 'uncommon' });
+    items.push({ id: uuid(), codexId: 'scroll_invisibility', position: { x: secretRoom.center.x + 1, y: secretRoom.center.y }, type: 'scroll', name: 'Scroll of Invisibility', value: 0, tier: 1, scrollType: 'invisibility', rarity: 'uncommon' });
 
     // --- Room 6: Arsenal ---
     const arsenal = new Rect(41, 2, 8, 26);

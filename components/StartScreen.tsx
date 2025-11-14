@@ -1,23 +1,39 @@
 import React, { useState, useEffect } from 'react';
 import { Difficulty } from '../types';
+import { CancelIcon } from './Icons';
 
 interface StartScreenProps {
   onStartGame: (difficulty: Difficulty, level?: number) => void;
   onStartTraining: () => void;
+  onLoadGame: () => void;
 }
 
-export const StartScreen: React.FC<StartScreenProps> = ({ onStartGame, onStartTraining }) => {
+export const StartScreen: React.FC<StartScreenProps> = ({ onStartGame, onStartTraining, onLoadGame }) => {
   const [showDifficulty, setShowDifficulty] = useState(false);
   const [showLevelSelect, setShowLevelSelect] = useState(false);
   const [testLevel, setTestLevel] = useState('1');
   const [titleClicks, setTitleClicks] = useState(0);
   const [showTestButton, setShowTestButton] = useState(false);
+  const [saveGameExists, setSaveGameExists] = useState(false);
 
   useEffect(() => {
     if (titleClicks >= 5) {
       setShowTestButton(true);
     }
   }, [titleClicks]);
+
+  useEffect(() => {
+    if (localStorage.getItem('cyber_rogue_savegame')) {
+        setSaveGameExists(true);
+    }
+  }, []);
+
+  const handleDeleteSave = () => {
+    if (window.confirm("Are you sure you want to delete your saved progress? This cannot be undone.")) {
+        localStorage.removeItem('cyber_rogue_savegame');
+        setSaveGameExists(false);
+    }
+  };
 
   const handleTestStart = () => {
       const level = parseInt(testLevel, 10);
@@ -102,6 +118,23 @@ export const StartScreen: React.FC<StartScreenProps> = ({ onStartGame, onStartTr
             >
                 Start New Game
             </button>
+            {saveGameExists && (
+                <div className="relative group">
+                    <button
+                        onClick={onLoadGame}
+                        className="w-full bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-3 px-6 rounded transition-colors text-lg"
+                    >
+                        Continue Game
+                    </button>
+                    <button
+                        onClick={handleDeleteSave}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-red-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Delete Save"
+                    >
+                        <CancelIcon />
+                    </button>
+                </div>
+            )}
             <button
                 onClick={onStartTraining}
                 className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded transition-colors text-lg"

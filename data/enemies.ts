@@ -31,7 +31,7 @@ export const ALL_ENEMIES: EnemyData[] = [
         name: 'Doom Drone',
         rank: 'mini-boss',
         char: 'D',
-        baseHealth: 25,
+        baseHealth: 30,
         baseAttack: 7,
     },
 

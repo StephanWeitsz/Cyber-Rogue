@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ALL_WEAPONS, ALL_ARMOR } from '../data/items';
 import { ALL_ENEMIES } from '../data/enemies';
 import { ItemData, EnemyData } from '../types';
+import { getRarityColor } from '../utils/rarity';
 
 interface CodexProps {
     discoveredItems: Set<string>;
@@ -25,10 +26,11 @@ export const Codex: React.FC<CodexProps> = ({ discoveredItems, discoveredEnemies
                      <ul className="space-y-2">
                         {allItems.map(item => (
                             <li key={item.codexId} className={`p-2 bg-gray-700 rounded transition-opacity ${discoveredItems.has(item.codexId) ? 'opacity-100' : 'opacity-30'}`}>
-                                <p className="font-bold text-white">{discoveredItems.has(item.codexId) ? item.name : '?????'}</p>
+                                <p className={`font-bold ${discoveredItems.has(item.codexId) ? getRarityColor(item.rarity) : 'text-white'}`}>{discoveredItems.has(item.codexId) ? item.name : '?????'}</p>
                                 {discoveredItems.has(item.codexId) && (
                                     <div className="text-xs text-gray-400">
                                         <p>Type: {item.type}, Tier: {item.tier}</p>
+                                        {item.rarity && <p>Rarity: <span className={`capitalize ${getRarityColor(item.rarity)}`}>{item.rarity}</span></p>}
                                         {item.type === 'weapon' && <p>Base ATK: {item.value}, Class: {item.weaponType}</p>}
                                         {item.type === 'armor' && <p>Base DEF: {item.value}</p>}
                                     </div>

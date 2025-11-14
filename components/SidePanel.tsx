@@ -28,10 +28,11 @@ interface SidePanelProps {
   onSellItem: (itemId: string) => void;
   onToggleAudio: (type: 'music' | 'sfx') => void;
   onClose: () => void;
+  onSaveGame: () => void;
 }
 
 export const SidePanel: React.FC<SidePanelProps> = (props) => {
-  const { player, dungeonLevel, messages, gameStatus, difficulty, audioSettings, onToggleAudio, isMobile, onClose, initialTab, tutorialMessage } = props;
+  const { player, dungeonLevel, messages, gameStatus, difficulty, audioSettings, onToggleAudio, isMobile, onClose, initialTab, tutorialMessage, onSaveGame } = props;
   const [activeTab, setActiveTab] = useState<ActiveTab>(initialTab);
   const [isStatsCollapsed, setIsStatsCollapsed] = useState(isMobile);
 
@@ -91,6 +92,17 @@ export const SidePanel: React.FC<SidePanelProps> = (props) => {
             </div>
         )}
       </div>
+
+      {gameStatus === 'playing' && (
+        <div className="flex-shrink-0 mt-4">
+            <button
+                onClick={onSaveGame}
+                className="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded transition-colors"
+            >
+                Save Progress
+            </button>
+        </div>
+      )}
 
       {dungeonLevel === 0 && tutorialMessage && (
         <div className="flex-shrink-0 mt-4 p-3 bg-cyan-900 bg-opacity-50 border border-cyan-700 rounded text-cyan-200 text-sm">

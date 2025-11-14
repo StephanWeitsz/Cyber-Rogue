@@ -1,6 +1,7 @@
 import React from 'react';
 import { Player, GameItem, GameState } from '../types';
 import { ItemIcon } from './Icons';
+import { getRarityColor } from '../utils/rarity';
 
 interface InventoryProps {
   player: Player;
@@ -11,7 +12,7 @@ interface InventoryProps {
 
 const ItemDetails: React.FC<{ item: GameItem }> = ({ item }) => (
     <div className="text-xs text-gray-400 ml-2">
-        <p className="font-bold text-white">{item.name}</p>
+        <p className={`font-bold ${getRarityColor(item.rarity)}`}>{item.name}</p>
         <p>Tier {item.tier}</p>
         {item.type === 'weapon' && <p>ATK: {item.value} ({item.weaponType})</p>}
         {item.type === 'armor' && <p>DEF: {item.value}</p>}

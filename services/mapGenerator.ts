@@ -226,7 +226,7 @@ export const generateMap = (
         if (!position) continue;
         
         if (Math.random() < 0.2) {
-            items.push({ id: uuid(), codexId: 'gold', position, type: 'gold', name: 'Credits', value: 10 + Math.floor(Math.random() * level * 5), tier: 1 });
+            items.push({ id: uuid(), codexId: 'gold', position, type: 'gold', name: 'Credits', value: 10 + Math.floor(Math.random() * level * 5), tier: 1, rarity: 'common' });
         } else if (possibleItems.length > 0) {
             const itemData = possibleItems[Math.floor(Math.random() * possibleItems.length)];
             items.push({ ...itemData, id: uuid(), position });
@@ -243,10 +243,10 @@ export const generateMap = (
 
   // Place loot in secret rooms
   const allSpecialItems: GameItem[] = [
-      { id: uuid(), codexId: 'scroll_teleport', position: {x:-1, y:-1}, type: 'scroll', name: 'Scroll of Teleport', value: 0, tier: 1, scrollType: 'teleport' },
-      { id: uuid(), codexId: 'scroll_invisibility', position: {x:-1, y:-1}, type: 'scroll', name: 'Scroll of Invisibility', value: 0, tier: 1, scrollType: 'invisibility' },
-      { id: uuid(), codexId: 'buff_attack', position: {x:-1, y:-1}, type: 'buff', name: 'Attack Boost', value: 2, tier: 1, buffType: 'attack_boost' },
-      { id: uuid(), codexId: 'buff_defense', position: {x:-1, y:-1}, type: 'buff', name: 'Defense Boost', value: 2, tier: 1, buffType: 'defense_boost' },
+      { id: uuid(), codexId: 'scroll_teleport', position: {x:-1, y:-1}, type: 'scroll', name: 'Scroll of Teleport', value: 0, tier: 1, scrollType: 'teleport', rarity: 'uncommon' },
+      { id: uuid(), codexId: 'scroll_invisibility', position: {x:-1, y:-1}, type: 'scroll', name: 'Scroll of Invisibility', value: 0, tier: 1, scrollType: 'invisibility', rarity: 'uncommon' },
+      { id: uuid(), codexId: 'buff_attack', position: {x:-1, y:-1}, type: 'buff', name: 'Attack Boost', value: 2, tier: 1, buffType: 'attack_boost', rarity: 'uncommon' },
+      { id: uuid(), codexId: 'buff_defense', position: {x:-1, y:-1}, type: 'buff', name: 'Defense Boost', value: 2, tier: 1, buffType: 'defense_boost', rarity: 'uncommon' },
   ];
 
   const maxItemTierForLevel = Math.min(3, Math.ceil(level / 4) + 1);
@@ -267,7 +267,7 @@ export const generateMap = (
           item = { ...itemData, id: uuid(), position };
       } else { // 30% chance for gold
           const goldValue = 50 + Math.floor(Math.random() * level * 10);
-          item = { id: uuid(), codexId: 'gold', position, type: 'gold', name: 'Credits Cache', value: goldValue, tier: 1 };
+          item = { id: uuid(), codexId: 'gold', position, type: 'gold', name: 'Credits Cache', value: goldValue, tier: 1, rarity: 'common' };
       }
       
       if(item) {

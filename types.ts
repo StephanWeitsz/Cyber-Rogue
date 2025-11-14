@@ -17,6 +17,7 @@ export type ScrollType = 'teleport' | 'invisibility';
 export type BuffType = 'attack_boost' | 'defense_boost' | 'invisibility';
 export type TrapType = 'spike' | 'poison';
 export type Difficulty = 'easy' | 'difficult' | 'hard' | 'test';
+export type Rarity = 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
 
 export interface ItemData {
   codexId: string;
@@ -25,6 +26,7 @@ export interface ItemData {
   value: number;
   tier: number;
   weaponType?: WeaponType;
+  rarity?: Rarity;
 }
 
 export interface GameItem {
@@ -40,6 +42,7 @@ export interface GameItem {
   scrollType?: ScrollType;
   buffType?: BuffType;
   duration?: number;
+  rarity?: Rarity;
 }
 
 export interface Buff {

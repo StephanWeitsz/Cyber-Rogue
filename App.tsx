@@ -257,6 +257,50 @@ const App: React.FC = () => {
     setGameState(createInitialState(difficulty, level));
     playerActionTaken.current = false; // Reset on new game
   };
+  
+  // --- Save / Load ---
+  const handleSaveGame = useCallback(() => {
+    if (!gameState || gameState.gameStatus !== 'playing') return;
+
+    const stateToSave = {
+        gameState: {
+            ...gameState,
+            visibleTiles: Array.from(gameState.visibleTiles),
+            discoveredItems: Array.from(gameState.discoveredItems),
+            discoveredEnemies: Array.from(gameState.discoveredEnemies),
+        },
+        audioSettings: audioSettings,
+    };
+
+    try {
+        localStorage.setItem('cyber_rogue_savegame', JSON.stringify(stateToSave));
+        setGameState(gs => gs ? addMessage("Game progress saved.", gs) : null);
+    } catch (error) {
+        console.error("Failed to save game:", error);
+        setGameState(gs => gs ? addMessage("Error: Could not save game.", gs) : null);
+    }
+  }, [gameState, audioSettings, addMessage]);
+
+  const handleLoadGame = useCallback(() => {
+    try {
+        const savedDataJSON = localStorage.getItem('cyber_rogue_savegame');
+        if (savedDataJSON) {
+            const savedData = JSON.parse(savedDataJSON);
+            const loadedGameState = {
+                ...savedData.gameState,
+                visibleTiles: new Set(savedData.gameState.visibleTiles),
+                discoveredItems: new Set(savedData.gameState.discoveredItems),
+                discoveredEnemies: new Set(savedData.gameState.discoveredEnemies),
+            };
+            setGameState(loadedGameState);
+            setAudioSettings(savedData.audioSettings);
+        }
+    } catch (error) {
+        console.error("Failed to load game:", error);
+        localStorage.removeItem('cyber_rogue_savegame');
+        alert("Failed to load saved game. The save file might be corrupted and has been deleted.");
+    }
+  }, []);
 
   const checkTutorialProgress = (gs: GameState): GameState => {
     if (gs.dungeonLevel !== 0 || gs.tutorialStep === undefined) return gs;
@@ -484,6 +528,11 @@ const App: React.FC = () => {
 
         if (newState.stairsPosition && newX === newState.stairsPosition.x && newY === newState.stairsPosition.y) {
             playSfx('level');
+            if (newState.dungeonLevel === 0) {
+              let newGs = addMessage("Training complete. Returning to main menu.", newState);
+              newGs.gameStatus = 'startScreen';
+              return newGs;
+            }
             return createInitialState(newState.difficulty!, newState.dungeonLevel + 1, newState.player, newState.discoveredItems, newState.discoveredEnemies);
         }
         
@@ -759,7 +808,7 @@ const App: React.FC = () => {
     });
   };
 
-  const handleBuyItem = (itemData: ItemData | any) => {
+  const handleBuyItem = (itemData: any) => {
     handlePlayerAction(gs => {
         const cost = itemData.cost || ((itemData.tier * itemData.value * 10) || 10);
         if (gs.player.gold >= cost) {
@@ -774,7 +823,8 @@ const App: React.FC = () => {
                 tier: itemData.tier,
                 weaponType: itemData.weaponType,
                 scrollType: itemData.scrollType,
-                buffType: itemData.buffType
+                buffType: itemData.buffType,
+                rarity: itemData.rarity,
             };
             newPlayer.inventory = [...newPlayer.inventory, newItem];
             let newGs = { ...gs, player: newPlayer };
@@ -1005,7 +1055,7 @@ const App: React.FC = () => {
 
 
   if (!gameState || gameState.gameStatus === 'startScreen') {
-    return <StartScreen onStartGame={handleStartGame} onStartTraining={() => handleStartGame('test', 0)} />;
+    return <StartScreen onStartGame={handleStartGame} onStartTraining={() => handleStartGame('test', 0)} onLoadGame={handleLoadGame} />;
   }
 
   const score = (gameState.player.gold ?? 0) + (gameState.player.xp ?? 0) + (gameState.dungeonLevel * 100);
@@ -1026,7 +1076,7 @@ const App: React.FC = () => {
             discoveredEnemies={gameState.discoveredEnemies} gameStatus={gameState.gameStatus} audioSettings={audioSettings}
             isMobile={true} initialTab={activeSidePanelTab} tutorialMessage={gameState.tutorialMessage}
             onEquipItem={handleEquipItem} onUseItem={handleUseItem} onBuyItem={handleBuyItem} onSellItem={handleSellItem}
-            onToggleAudio={handleToggleAudio} onClose={() => setShowSidePanel(false)}
+            onToggleAudio={handleToggleAudio} onClose={() => setShowSidePanel(false)} onSaveGame={handleSaveGame}
           />
         </div>
       )}
@@ -1040,7 +1090,7 @@ const App: React.FC = () => {
           discoveredEnemies={gameState.discoveredEnemies} gameStatus={gameState.gameStatus} audioSettings={audioSettings}
           isMobile={false} initialTab={activeSidePanelTab} tutorialMessage={gameState.tutorialMessage}
           onEquipItem={handleEquipItem} onUseItem={handleUseItem} onBuyItem={handleBuyItem} onSellItem={handleSellItem}
-          onToggleAudio={handleToggleAudio} onClose={() => {}}
+          onToggleAudio={handleToggleAudio} onClose={() => {}} onSaveGame={handleSaveGame}
         />
       )}
       

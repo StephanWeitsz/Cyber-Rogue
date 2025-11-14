@@ -1,15 +1,28 @@
 import React, { useState, useMemo } from 'react';
-import { Player, GameItem, ItemData, GameState } from '../types';
+// FIX: import Rarity to explicitly type shop consumables
+import { Player, GameItem, ItemData, GameState, Rarity } from '../types';
 import { ALL_WEAPONS, ALL_ARMOR } from '../data/items';
 import { ItemIcon } from './Icons';
+import { getRarityColor } from '../utils/rarity';
 
 interface StoreProps {
   player: Player;
-  onBuyItem: (item: ItemData | { type: 'potion' | 'buff'; name: string; value: number, tier: number, codexId: string, cost: number }) => void;
+  onBuyItem: (item: ItemData | { type: 'potion' | 'buff'; name: string; value: number, tier: number, codexId: string, cost: number, rarity: Rarity }) => void;
   onSellItem: (itemId: string) => void;
   dungeonLevel: number;
   gameStatus: GameState['gameStatus'];
 }
+
+// FIX: Define a type for shop consumables to fix type inference issue.
+type ShopConsumable = {
+    type: 'potion' | 'buff';
+    name: string;
+    value: number;
+    tier: number;
+    codexId: string;
+    cost: number;
+    rarity: Rarity;
+};
 
 const getShopItems = (level: number) => {
     const itemPool: (ItemData)[] = [];
@@ -18,16 +31,17 @@ const getShopItems = (level: number) => {
     itemPool.push(...ALL_WEAPONS.filter(i => i.tier <= maxTier));
     itemPool.push(...ALL_ARMOR.filter(i => i.tier <= maxTier));
     
-    const consumables = [
-        { type: 'potion' as 'potion', name: 'Health Pack', value: 25, tier: 1, codexId: 'potion_health', cost: 25 },
-        { type: 'buff' as 'buff', name: 'Attack Boost', value: 2, tier: 1, codexId: 'buff_attack', cost: 50 },
-        { type: 'buff' as 'buff', name: 'Defense Boost', value: 2, tier: 1, codexId: 'buff_defense', cost: 50 },
+    // FIX: Explicitly type the consumables array to allow for multiple rarities on the same item type.
+    const consumables: ShopConsumable[] = [
+        { type: 'potion', name: 'Health Pack', value: 25, tier: 1, codexId: 'potion_health', cost: 25, rarity: 'common' },
+        { type: 'buff', name: 'Attack Boost', value: 2, tier: 1, codexId: 'buff_attack', cost: 50, rarity: 'uncommon' },
+        { type: 'buff', name: 'Defense Boost', value: 2, tier: 1, codexId: 'buff_defense', cost: 50, rarity: 'uncommon' },
     ];
     if (level > 3) {
-        consumables.push({ type: 'potion' as 'potion', name: 'Large Health Pack', value: 75, tier: 2, codexId: 'potion_health_large', cost: 75 });
+        consumables.push({ type: 'potion', name: 'Large Health Pack', value: 75, tier: 2, codexId: 'potion_health_large', cost: 75, rarity: 'uncommon' });
     }
 
-    const shopInventory: (ItemData | typeof consumables[0])[] = [];
+    const shopInventory: (ItemData | ShopConsumable)[] = [];
     
     const tempPool = [...itemPool];
     for(let i=0; i < 3 && tempPool.length > 0; i++) {
@@ -39,7 +53,7 @@ const getShopItems = (level: number) => {
     return [...shopInventory, ...consumables];
 };
 
-const getItemCost = (item: ItemData | {cost?: number, tier: number}) => {
+const getItemCost = (item: ItemData | {cost?: number, tier: number, value?: number}) => {
     if ('cost' in item && item.cost) return item.cost;
     if ('value' in item && item.value) return item.value * 10 * item.tier;
     return 10;
@@ -70,7 +84,7 @@ export const Store: React.FC<StoreProps> = ({ player, onBuyItem, onSellItem, dun
                                 <li key={i} className="flex items-center p-2 bg-gray-700 rounded">
                                     <ItemIcon item={item as GameItem} />
                                     <div className="ml-2 text-xs">
-                                        <p className="font-bold text-white">{item.name}</p>
+                                        <p className={`font-bold ${getRarityColor(item.rarity)}`}>{item.name}</p>
                                         <p>Tier {item.tier}</p>
                                     </div>
                                     <div className="ml-auto text-right">
@@ -90,7 +104,7 @@ export const Store: React.FC<StoreProps> = ({ player, onBuyItem, onSellItem, dun
                             <li key={item.id} className="flex items-center p-2 bg-gray-700 rounded">
                                 <ItemIcon item={item} />
                                 <div className="ml-2 text-xs">
-                                    <p className="font-bold text-white">{item.name}</p>
+                                    <p className={`font-bold ${getRarityColor(item.rarity)}`}>{item.name}</p>
                                     <p>Tier {item.tier}</p>
                                 </div>
                                 <div className="ml-auto text-right">
